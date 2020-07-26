@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(Text("Bem vindo ao ByteBank", textDirection: TextDirection.ltr,));
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
