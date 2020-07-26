@@ -1,6 +1,25 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(Text("Bem vindo ao ByteBank", textDirection: TextDirection.ltr,));
+void main() => runApp(
+    Column(
+      children: <Widget>[
+        Text(
+          'ByteBank',
+          textDirection: TextDirection.ltr,
+        ),
+        Text(
+          'Bem vindo ao ByteBank',
+          textDirection: TextDirection.ltr,
+        ),
+        Expanded(
+          child: FittedBox(
+            fit: BoxFit.contain, // otherwise the logo will be tiny
+            child: const FlutterLogo(),
+          ),
+        ),
+      ],
+    )
+);
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
