@@ -4,6 +4,13 @@ import 'package:bytebank/models/transferencia.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+const _tituloAppBar = "Criando Transferencia";
+const _rotuloNumeroConta = "Número da conta";
+const _dicaNumeroConta = "0000";
+const _rotuloValor = "Valor";
+const _dicaValor = "0.00";
+const _textoBotao = "Confirmar";
+
 class FormularioTransferencia extends StatefulWidget {
 
   final TextEditingController _controladorNumeroConta = TextEditingController();
@@ -18,26 +25,27 @@ class FormularioTransferencia extends StatefulWidget {
 class FormularioTransferenciaState extends State<FormularioTransferencia> {
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         appBar: AppBar(
-            title: Text("Criando Transferencia")
+            title: Text(_tituloAppBar)
         ),
         body: SingleChildScrollView(
           child: Column(
             children: [
               Editor(
                   controlador: widget._controladorNumeroConta,
-                  rotulo: "Número da conta",
-                  dica: "0000"
+                  rotulo: _rotuloNumeroConta,
+                  dica: _dicaNumeroConta
               ),
               Editor(
                   controlador: widget._controladorValor,
-                  rotulo: "Valor",
-                  dica: "0.00",
+                  rotulo: _rotuloValor,
+                  dica: _dicaValor,
                   icone: Icons.monetization_on
               ),
               RaisedButton(
-                child: Text("Confirmar"),
+                child: Text(_textoBotao),
                 onPressed: () => _criaTransferencia(context),
               )
             ],
@@ -51,8 +59,6 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
     final int numeroConta = int.tryParse(widget._controladorNumeroConta.text);
     if (numeroConta != null && valor != null) {
       final transferencia = Transferencia(valor, numeroConta);
-      debugPrint("Criando transferencia");
-      debugPrint('$transferencia');
       Navigator.pop(context, transferencia);
     }
   }
