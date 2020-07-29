@@ -1,4 +1,5 @@
 import 'package:bytebank/screens/contatos/dashboard.dart';
+import 'package:bytebank/screens/contatos/lista.dart';
 import 'package:bytebank/screens/transferencia/lista.dart';
 import 'package:flutter/material.dart';
 
