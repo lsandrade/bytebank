@@ -1,8 +1,19 @@
 
+import 'package:bytebank/models/informacoes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class FormularioContatos extends StatelessWidget {
+class FormularioContatos extends StatefulWidget {
+
+  @override
+  _FormularioContatosState createState() => _FormularioContatosState();
+}
+
+class _FormularioContatosState extends State<FormularioContatos> {
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _accountController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,6 +31,7 @@ class FormularioContatos extends StatelessWidget {
               style: TextStyle(
                 fontSize: 24.0
               ),
+              controller: _nameController,
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
@@ -31,6 +43,7 @@ class FormularioContatos extends StatelessWidget {
                     fontSize: 24.0
                 ),
                 keyboardType: TextInputType.number,
+                controller: _accountController,
               ),
             ),
             Padding(
@@ -39,7 +52,14 @@ class FormularioContatos extends StatelessWidget {
                 width: double.maxFinite,
                 child: RaisedButton(
                   child: Text('Criar'),
-                  onPressed: () {},
+                  onPressed: () {
+                    final String name = _nameController.text;
+                    final int account = int.tryParse(_accountController.text);
+
+                    final Contato contato = Contato(name, account);
+                    Navigator.pop(context, contato);
+
+                  },
                 ),
               ),
             )
@@ -48,5 +68,4 @@ class FormularioContatos extends StatelessWidget {
       ),
     );
   }
-
 }
