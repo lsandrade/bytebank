@@ -14,17 +14,18 @@ class ListaContatos extends StatelessWidget {
       appBar: AppBar(
         title: Text("Contatos"),
       ),
-      body: FutureBuilder(
-        future: findAll(),
+      body: FutureBuilder<List<Contato>>(
+        initialData: List(),
+        future: Future.delayed(Duration(seconds: 1)).then((value) => findAll()),
         builder: (context, snapshot) {
-          final List<Contato> contatos = snapshot.data;
-          return ListView.builder(
-            itemBuilder: (contex, index) {
-              final Contato contato = contatos[index];
-              return _ContactItem(contato: contato,);
-            },
-            itemCount: contatos.length,
-          );
+            final List<Contato> contatos = snapshot.data;
+            return ListView.builder(
+              itemBuilder: (contex, index) {
+                final Contato contato = contatos[index];
+                return _ContactItem(contato: contato,);
+              },
+              itemCount: contatos.length,
+            );
         },
       ),
       floatingActionButton: FloatingActionButton(
