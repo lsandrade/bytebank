@@ -1,4 +1,5 @@
 
+import 'package:bytebank/database/app_database.dart';
 import 'package:bytebank/models/contato.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -57,8 +58,9 @@ class _FormularioContatosState extends State<FormularioContatos> {
                     final int account = int.tryParse(_accountController.text);
 
                     final Contato contato = Contato(0, name, account);
-                    Navigator.pop(context, contato);
-
+                    save(contato).then((id) {
+                      Navigator.pop(context);
+                    });
                   },
                 ),
               ),

@@ -1,13 +1,15 @@
-
-
 import 'package:bytebank/database/app_database.dart';
 import 'package:bytebank/models/contato.dart';
 import 'package:bytebank/screens/contatos/formulario.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class ListaContatos extends StatelessWidget {
+class ListaContatos extends StatefulWidget {
+  @override
+  _ListaContatosState createState() => _ListaContatosState();
+}
 
+class _ListaContatosState extends State<ListaContatos> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +20,7 @@ class ListaContatos extends StatelessWidget {
         initialData: List(),
         future: Future.delayed(Duration(seconds: 1)).then((value) => findAll()),
         builder: (context, snapshot) {
-          switch(snapshot.connectionState) {
+          switch (snapshot.connectionState) {
             case ConnectionState.none:
               break;
             case ConnectionState.waiting:
@@ -26,10 +28,7 @@ class ListaContatos extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                    Text("Loading")
-                  ],
+                  children: [CircularProgressIndicator(), Text("Loading")],
                 ),
               );
               break;
@@ -40,7 +39,9 @@ class ListaContatos extends StatelessWidget {
               return ListView.builder(
                 itemBuilder: (contex, index) {
                   final Contato contato = contatos[index];
-                  return _ContactItem(contato: contato,);
+                  return _ContactItem(
+                    contato: contato,
+                  );
                 },
                 itemCount: contatos.length,
               );
@@ -52,10 +53,12 @@ class ListaContatos extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => FormularioContatos()
-            )
-          ).then((contato) => debugPrint(contato.toString()));
+              MaterialPageRoute(builder: (context) => FormularioContatos())
+          ).then((value){
+            setState(() {
+              widget.createState();
+            });
+          });
         },
         child: Icon(Icons.add),
       ),
@@ -63,8 +66,8 @@ class ListaContatos extends StatelessWidget {
   }
 }
 
-class _ContactItem extends StatelessWidget {
 
+class _ContactItem extends StatelessWidget {
   final Contato contato;
 
   const _ContactItem({Key key, this.contato}) : super(key: key);
@@ -75,18 +78,13 @@ class _ContactItem extends StatelessWidget {
       child: ListTile(
         title: Text(
           contato.name,
-          style: TextStyle(
-              fontSize: 24.0
-          ),
+          style: TextStyle(fontSize: 24.0),
         ),
         subtitle: Text(
           contato.account.toString(),
-          style: TextStyle(
-              fontSize: 16.0
-          ),
+          style: TextStyle(fontSize: 16.0),
         ),
       ),
     );
   }
-
 }

@@ -13,7 +13,8 @@ Future<Database> createDatabase() {
               "name TEXT,"
               "account INTEGER)");
         },
-    version: 1);
+    version: 1,
+    onDowngrade: onDatabaseDowngradeDelete);
   });
 }
 
