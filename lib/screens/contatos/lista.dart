@@ -18,14 +18,35 @@ class ListaContatos extends StatelessWidget {
         initialData: List(),
         future: Future.delayed(Duration(seconds: 1)).then((value) => findAll()),
         builder: (context, snapshot) {
-            final List<Contato> contatos = snapshot.data;
-            return ListView.builder(
-              itemBuilder: (contex, index) {
-                final Contato contato = contatos[index];
-                return _ContactItem(contato: contato,);
-              },
-              itemCount: contatos.length,
-            );
+          switch(snapshot.connectionState) {
+            case ConnectionState.none:
+              break;
+            case ConnectionState.waiting:
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    Text("Loading")
+                  ],
+                ),
+              );
+              break;
+            case ConnectionState.active:
+              break;
+            case ConnectionState.done:
+              final List<Contato> contatos = snapshot.data;
+              return ListView.builder(
+                itemBuilder: (contex, index) {
+                  final Contato contato = contatos[index];
+                  return _ContactItem(contato: contato,);
+                },
+                itemCount: contatos.length,
+              );
+              break;
+          }
+          return Text("Unknown error");
         },
       ),
       floatingActionButton: FloatingActionButton(
