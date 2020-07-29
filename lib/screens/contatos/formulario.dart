@@ -1,5 +1,5 @@
 
-import 'package:bytebank/models/informacoes.dart';
+import 'package:bytebank/models/contato.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -56,7 +56,7 @@ class _FormularioContatosState extends State<FormularioContatos> {
                     final String name = _nameController.text;
                     final int account = int.tryParse(_accountController.text);
 
-                    final Contato contato = Contato(name, account);
+                    final Contato contato = Contato(0, name, account);
                     Navigator.pop(context, contato);
 
                   },
