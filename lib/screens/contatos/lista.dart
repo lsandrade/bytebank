@@ -1,5 +1,6 @@
 
 
+import 'package:bytebank/database/app_database.dart';
 import 'package:bytebank/models/contato.dart';
 import 'package:bytebank/screens/contatos/formulario.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,20 +8,24 @@ import 'package:flutter/material.dart';
 
 class ListaContatos extends StatelessWidget {
 
-  final List<Contato> contatos = List();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Contatos"),
       ),
-      body: ListView.builder(
-        itemBuilder: (contex, index){
-          final Contato contato = contatos[index];
-          return _ContactItem(contato: contato,);
+      body: FutureBuilder(
+        future: findAll(),
+        builder: (context, snapshot) {
+          final List<Contato> contatos = snapshot.data;
+          return ListView.builder(
+            itemBuilder: (contex, index) {
+              final Contato contato = contatos[index];
+              return _ContactItem(contato: contato,);
+            },
+            itemCount: contatos.length,
+          );
         },
-        itemCount: contatos.length,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
