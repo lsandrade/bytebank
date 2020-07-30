@@ -1,13 +1,15 @@
-import 'package:bytebank/database/app_database.dart';
 import 'package:bytebank/screens/contatos/dashboard.dart';
 import 'package:flutter/material.dart';
 
+import 'dao/dao_contato.dart';
 import 'models/contato.dart';
 
 void main() {
+  final ContatoDao _contatoDao = ContatoDao();
+
   runApp(ByteBankApp());
-  save(Contato(1, "Alex", 1000)).then((id) {
-    findAll().then((contatos) {
+  _contatoDao.save(Contato(1, "Alex", 1000)).then((id) {
+    _contatoDao.findAll().then((contatos) {
       debugPrint(contatos.toString());
     });
   });

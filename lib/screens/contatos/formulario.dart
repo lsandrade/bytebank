@@ -1,5 +1,5 @@
 
-import 'package:bytebank/database/app_database.dart';
+import 'package:bytebank/dao/dao_contato.dart';
 import 'package:bytebank/models/contato.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +14,7 @@ class _FormularioContatosState extends State<FormularioContatos> {
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _accountController = TextEditingController();
+  final ContatoDao _contatoDao = ContatoDao();
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +59,7 @@ class _FormularioContatosState extends State<FormularioContatos> {
                     final int account = int.tryParse(_accountController.text);
 
                     final Contato contato = Contato(0, name, account);
-                    save(contato).then((id) {
+                    _contatoDao.save(contato).then((id) {
                       Navigator.pop(context);
                     });
                   },
