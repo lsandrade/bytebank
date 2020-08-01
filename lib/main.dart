@@ -1,23 +1,15 @@
 import 'package:bytebank/screens/contatos/dashboard.dart';
+import 'package:bytebank/webapi/webclient.dart';
 import 'package:flutter/material.dart';
 
-import 'dao/dao_contato.dart';
-import 'models/contato.dart';
-
 void main() {
-  final ContatoDao _contatoDao = ContatoDao();
-
   runApp(ByteBankApp());
-  _contatoDao.save(Contato(1, "Alex", 1000)).then((id) {
-    _contatoDao.findAll().then((contatos) {
-      debugPrint(contatos.toString());
-    });
-  });
 }
 
 class ByteBankApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    findAll();
     return MaterialApp(
       home: Dashboard(),
       theme: ThemeData(
