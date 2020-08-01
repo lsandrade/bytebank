@@ -18,14 +18,36 @@ class Dashboard extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Image.asset("images/bytebank_logo.png"),
             ),
-            Row(
-              children: [
-                _FeatureItem("Transferir", Icons.monetization_on),
-                _FeatureItem("Lista de transferências", Icons.description),
-              ],
+            Container(
+              height: 120,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  _FeatureItem(
+                    "Transferir",
+                    Icons.monetization_on,
+                    onClick: () {
+                      _showContactsList(context);
+                    },
+                  ),
+                  _FeatureItem(
+                    "Lista de transferências",
+                    Icons.description,
+                    onClick: () => debugPrint("lista de transferencias"),
+                  ),
+                ],
+              ),
             ),
           ],
       ),
+    );
+  }
+
+  void _showContactsList(BuildContext context) {
+    Navigator.of(context).push(
+        MaterialPageRoute(
+            builder: (context) => ListaContatos()
+        )
     );
   }
 }
@@ -34,8 +56,12 @@ class _FeatureItem extends StatelessWidget {
 
   final String _name;
   final IconData _icon;
+  final Function onClick;
 
-  const _FeatureItem( this._name, this._icon);
+  const _FeatureItem( this._name,
+      this._icon,
+      {@required this.onClick}
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -45,11 +71,7 @@ class _FeatureItem extends StatelessWidget {
         color: Theme.of(context).primaryColor,
         child: InkWell(
           onTap: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (context) => ListaContatos()
-                )
-            );
+            onClick();
           },
           child: Container(
             padding: EdgeInsets.all(8.0),
