@@ -18,7 +18,7 @@ class _ListaContatosState extends State<ListaContatos> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Contatos"),
+        title: Text("Transferir"),
       ),
       body: FutureBuilder<List<Contato>>(
         initialData: List(),
