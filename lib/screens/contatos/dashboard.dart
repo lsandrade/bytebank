@@ -1,5 +1,6 @@
 
 import 'package:bytebank/screens/contatos/lista.dart';
+import 'package:bytebank/screens/transferencia/lista.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatelessWidget {
@@ -26,14 +27,12 @@ class Dashboard extends StatelessWidget {
                   _FeatureItem(
                     "Transferir",
                     Icons.monetization_on,
-                    onClick: () {
-                      _showContactsList(context);
-                    },
+                    onClick: () => _showContactsList(context),
                   ),
                   _FeatureItem(
                     "Lista de transferências",
                     Icons.description,
-                    onClick: () => debugPrint("lista de transferencias"),
+                    onClick: () => _showTransactionsList(context),
                   ),
                 ],
               ),
@@ -47,6 +46,14 @@ class Dashboard extends StatelessWidget {
     Navigator.of(context).push(
         MaterialPageRoute(
             builder: (context) => ListaContatos()
+        )
+    );
+  }
+
+  _showTransactionsList(BuildContext context) {
+    Navigator.of(context).push(
+        MaterialPageRoute(
+            builder: (context) => ListaTransferencias()
         )
     );
   }
