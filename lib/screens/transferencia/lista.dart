@@ -75,7 +75,7 @@ class ItemTransferencia extends StatelessWidget {
       child: ListTile(
         leading: Icon(Icons.monetization_on),
         title: Text(_transferencia.valor.toString()),
-        subtitle: Text(_transferencia.numeroConta.toString()),
+        subtitle: Text(""), // TODO: colocar contato
       ),
     );
   }

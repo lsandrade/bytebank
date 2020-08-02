@@ -58,7 +58,7 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
     final double valor = double.tryParse(widget._controladorValor.text);
     final int numeroConta = int.tryParse(widget._controladorNumeroConta.text);
     if (numeroConta != null && valor != null) {
-      final transferencia = Transferencia(valor, numeroConta);
+      final transferencia = Transferencia(valor, null); // TODO: colocar contato
       Navigator.pop(context, transferencia);
     }
   }
