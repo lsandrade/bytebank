@@ -32,7 +32,7 @@ Future<List<Transferencia>> findAll() async {
   final Client client = HttpClientWithInterceptor.build(
       interceptors: [LoggingInterceptor()]
   );
-  final Response response = await client.get("http://192.168.15.17:8080/transactions");
+  final Response response = await client.get("http://192.168.15.17:8080/transactions").timeout(Duration(seconds: 5));
   print("FindAll:");
   print(response.body);
   print("================");

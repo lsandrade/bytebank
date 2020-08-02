@@ -2,6 +2,7 @@
 // de maneira dinamica
 
 // Stateless: Não consegue modificar o conteúdo
+import 'package:bytebank/components/centered_message.dart';
 import 'package:bytebank/components/progress.dart';
 import 'package:bytebank/models/transferencia.dart';
 import 'package:bytebank/webapi/webclient.dart';
@@ -40,17 +41,25 @@ class ListaTransferenciasState extends State<ListaTransferencias> {
             case ConnectionState.active:
               break;
             case ConnectionState.done:
-              final List<Transferencia> transferencias = snapshot.data;
-              return ListView.builder(
-                itemCount: transferencias.length,
-                itemBuilder: (context, indice) {
-                  final transferencia = transferencias[indice];
-                  return ItemTransferencia(transferencia);
-                },
+              if(snapshot.hasData) {
+                final List<Transferencia> transferencias = snapshot.data;
+                if (transferencias.isNotEmpty) {
+                  return ListView.builder(
+                    itemCount: transferencias.length,
+                    itemBuilder: (context, indice) {
+                      final transferencia = transferencias[indice];
+                      return ItemTransferencia(transferencia);
+                    },
+                  );
+                }
+              }
+              return CenteredMessage(
+                  "Nenhuma transação encontrada",
+                  icon: Icons.warning
               );
               break;
           }
-          return Text("Unknown error");
+          return CenteredMessage("Unknown error");
         },
       ),
       floatingActionButton: FloatingActionButton(
