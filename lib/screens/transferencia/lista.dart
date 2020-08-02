@@ -4,12 +4,10 @@
 // Stateless: Não consegue modificar o conteúdo
 import 'package:bytebank/components/centered_message.dart';
 import 'package:bytebank/components/progress.dart';
+import 'package:bytebank/http/webclients/transferencia.dart';
 import 'package:bytebank/models/transferencia.dart';
-import 'package:bytebank/webapi/webclient.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'formulario.dart';
 
 const _tituloAppBar = "Transferências";
 
@@ -23,6 +21,9 @@ class ListaTransferencias extends StatefulWidget {
 }
 
 class ListaTransferenciasState extends State<ListaTransferencias> {
+
+  final TransferenciaWebClient _webClient = TransferenciaWebClient();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +31,7 @@ class ListaTransferenciasState extends State<ListaTransferencias> {
         title: Text(_tituloAppBar),
       ),
       body: FutureBuilder<List<Transferencia>>(
-        future: findAll(),
+        future: _webClient.findAll(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:

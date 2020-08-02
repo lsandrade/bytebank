@@ -1,5 +1,6 @@
 
 import 'package:bytebank/components/editor.dart';
+import 'package:bytebank/http/webclients/transferencia.dart';
 import 'package:bytebank/models/contato.dart';
 import 'package:bytebank/models/transferencia.dart';
 import 'package:bytebank/webapi/webclient.dart';
@@ -27,6 +28,7 @@ class FormularioTransferencia extends StatefulWidget {
 
 class FormularioTransferenciaState extends State<FormularioTransferencia> {
   final TextEditingController _controladorValor = TextEditingController();
+  final TransferenciaWebClient _webClient = TransferenciaWebClient();
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +80,7 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
   void _criaTransferenciaApi(BuildContext context) {
     final double valor = double.tryParse(_controladorValor.text);
     final transferenciaCriada = Transferencia(valor, widget.contato);
-    save(transferenciaCriada).then((transferencia) {
+    _webClient.save(transferenciaCriada).then((transferencia) {
       if (transferencia != null) {
         Navigator.pop(context);
       }
