@@ -3,7 +3,6 @@ import 'package:bytebank/components/editor.dart';
 import 'package:bytebank/http/webclients/transferencia.dart';
 import 'package:bytebank/models/contato.dart';
 import 'package:bytebank/models/transferencia.dart';
-import 'package:bytebank/webapi/webclient.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

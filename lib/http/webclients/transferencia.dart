@@ -9,16 +9,8 @@ import '../webclient.dart';
 
 class TransferenciaWebClient {
   Future<List<Transferencia>> findAll() async {
-    final Response response =
-    await client.get(baseUrl).timeout(Duration(seconds: 5));
-    final List<dynamic> decoded = jsonDecode(response.body);
-    final List<Transferencia> transferencias = List();
-
-    for (Map<String, dynamic> transferenciaJson in decoded) {
-      final Transferencia transferencia = _jsonParaTransferencia(
-          transferenciaJson);
-      transferencias.add(transferencia);
-    }
+    final Response response = await client.get(baseUrl).timeout(Duration(seconds: 5));
+    List<Transferencia> transferencias = _jsonParaListaTransferencias(response.body);
 
     return transferencias;
   }
@@ -59,5 +51,17 @@ class TransferenciaWebClient {
             json['contact']['accountNumber']
         )
     );
+  }
+
+  List<Transferencia> _jsonParaListaTransferencias(String body) {
+    final List<dynamic> transferenciasDecoded = jsonDecode(body);
+    final List<Transferencia> transferencias = List();
+
+    for (Map<String, dynamic> transferenciaJson in transferenciasDecoded) {
+      final Transferencia transferencia = _jsonParaTransferencia(
+          transferenciaJson);
+      transferencias.add(transferencia);
+    }
+    return transferencias;
   }
 }
