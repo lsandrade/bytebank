@@ -1,3 +1,4 @@
+import 'package:bytebank/components/progress.dart';
 import 'package:bytebank/dao/dao_contato.dart';
 import 'package:bytebank/database/app_database.dart';
 import 'package:bytebank/models/contato.dart';
@@ -22,19 +23,13 @@ class _ListaContatosState extends State<ListaContatos> {
       ),
       body: FutureBuilder<List<Contato>>(
         initialData: List(),
-        future: Future.delayed(Duration(seconds: 1)).then((value) => _contatoDao.findAll()),
+        future: Future.delayed(Duration(milliseconds: 500)).then((value) => _contatoDao.findAll()),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
               break;
             case ConnectionState.waiting:
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [CircularProgressIndicator(), Text("Loading")],
-                ),
-              );
+              return Progress("Carregando");
               break;
             case ConnectionState.active:
               break;
