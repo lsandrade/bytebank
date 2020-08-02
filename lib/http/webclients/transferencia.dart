@@ -12,9 +12,11 @@ class TransferenciaWebClient {
   Future<List<Transferencia>> findAll() async {
     final Response response = await client.get(baseUrl)
         .timeout(Duration(seconds: 5));
-    List<Transferencia> transferencias = _jsonParaListaTransferencias(response.body);
 
-    return transferencias;
+    final List<dynamic> transferenciasDecoded = jsonDecode(response.body);
+
+    return transferenciasDecoded.map((dynamic json) =>
+        Transferencia.fromJson(json)).toList();
   }
 
   Future<Transferencia> save(Transferencia transferencia) async {
@@ -29,13 +31,4 @@ class TransferenciaWebClient {
     return Transferencia.fromJson(jsonDecode(response.body));
   }
 
-  List<Transferencia> _jsonParaListaTransferencias(String body) {
-    final List<dynamic> transferenciasDecoded = jsonDecode(body);
-    final List<Transferencia> transferencias = List();
-
-    for (Map<String, dynamic> transferenciaJson in transferenciasDecoded) {
-      transferencias.add(Transferencia.fromJson(transferenciaJson));
-    }
-    return transferencias;
-  }
 }
