@@ -62,17 +62,17 @@ class ListaTransferenciasState extends State<ListaTransferencias> {
           return CenteredMessage("Unknown error");
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          final Future future =
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return FormularioTransferencia();
-          }));
-          future.then(
-              (transferenciaRecebida) => _atualiza(transferenciaRecebida));
-        },
-      ),
+//      floatingActionButton: FloatingActionButton(
+//        child: Icon(Icons.add),
+//        onPressed: () {
+//          final Future future =
+//              Navigator.push(context, MaterialPageRoute(builder: (context) {
+//            return FormularioTransferencia(null);
+//          }));
+//          future.then(
+//              (transferenciaRecebida) => _atualiza(transferenciaRecebida));
+//        },
+//      ),
     );
   }
 

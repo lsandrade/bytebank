@@ -1,8 +1,8 @@
 import 'package:bytebank/components/progress.dart';
 import 'package:bytebank/dao/dao_contato.dart';
-import 'package:bytebank/database/app_database.dart';
 import 'package:bytebank/models/contato.dart';
 import 'package:bytebank/screens/contatos/formulario.dart';
+import 'package:bytebank/screens/transferencia/formulario.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -39,7 +39,14 @@ class _ListaContatosState extends State<ListaContatos> {
                 itemBuilder: (contex, index) {
                   final Contato contato = contatos[index];
                   return _ContactItem(
-                    contato: contato,
+                    contato,
+                    onClick: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => FormularioTransferencia(contato)
+                        )
+                      );
+                    },
                   );
                 },
                 itemCount: contatos.length,
@@ -68,13 +75,19 @@ class _ListaContatosState extends State<ListaContatos> {
 
 class _ContactItem extends StatelessWidget {
   final Contato contato;
+  final Function onClick;
 
-  const _ContactItem({Key key, this.contato}) : super(key: key);
+  const _ContactItem(
+      this.contato, {
+        @required this.onClick
+      });
 
   @override
-  Widget build(BuildContext context) {
+  Widget
+  build(BuildContext context) {
     return Card(
       child: ListTile(
+        onTap: () => onClick(),
         title: Text(
           contato.name,
           style: TextStyle(fontSize: 24.0),

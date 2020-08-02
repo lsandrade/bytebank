@@ -1,6 +1,8 @@
 
 import 'package:bytebank/components/editor.dart';
+import 'package:bytebank/models/contato.dart';
 import 'package:bytebank/models/transferencia.dart';
+import 'package:bytebank/webapi/webclient.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,8 +15,9 @@ const _textoBotao = "Confirmar";
 
 class FormularioTransferencia extends StatefulWidget {
 
-  final TextEditingController _controladorNumeroConta = TextEditingController();
-  final TextEditingController _controladorValor = TextEditingController();
+  final Contato contato;
+
+  FormularioTransferencia(this.contato);
 
   @override
   State<StatefulWidget> createState() {
@@ -23,6 +26,8 @@ class FormularioTransferencia extends StatefulWidget {
 }
 
 class FormularioTransferenciaState extends State<FormularioTransferencia> {
+  final TextEditingController _controladorValor = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
 
@@ -31,35 +36,52 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
             title: Text(_tituloAppBar)
         ),
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Editor(
-                  controlador: widget._controladorNumeroConta,
-                  rotulo: _rotuloNumeroConta,
-                  dica: _dicaNumeroConta
-              ),
-              Editor(
-                  controlador: widget._controladorValor,
-                  rotulo: _rotuloValor,
-                  dica: _dicaValor,
-                  icone: Icons.monetization_on
-              ),
-              RaisedButton(
-                child: Text(_textoBotao),
-                onPressed: () => _criaTransferencia(context),
-              )
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.contato.name,
+                  style: TextStyle(fontSize: 24.0),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Text(
+                    widget.contato.name,
+                    style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Editor(
+                    controlador: _controladorValor,
+                    rotulo: _rotuloValor,
+                    dica: _dicaValor,
+//                    icone: Icons.monetization_on
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: SizedBox(
+                    width: double.maxFinite,
+                    child: RaisedButton(
+                      child: Text(_textoBotao),
+                      onPressed: () => _criaTransferenciaApi(context),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         )
     );
   }
 
-  void _criaTransferencia(BuildContext context) {
-    final double valor = double.tryParse(widget._controladorValor.text);
-    final int numeroConta = int.tryParse(widget._controladorNumeroConta.text);
-    if (numeroConta != null && valor != null) {
-      final transferencia = Transferencia(valor, null); // TODO: colocar contato
-      Navigator.pop(context, transferencia);
-    }
+  void _criaTransferenciaApi(BuildContext context) {
+    final double valor = double.tryParse(_controladorValor.text);
+    final transferenciaCriada = Transferencia(valor, widget.contato);
+    save(transferenciaCriada).then((transferencia) {
+      if (transferencia != null) {
+        Navigator.pop(context);
+      }
+    });
   }
 }
