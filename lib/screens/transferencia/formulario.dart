@@ -1,5 +1,5 @@
-
 import 'package:bytebank/components/editor.dart';
+import 'package:bytebank/components/response_dialog.dart';
 import 'package:bytebank/components/transaction_auth_dialog.dart';
 import 'package:bytebank/http/webclients/transferencia.dart';
 import 'package:bytebank/models/contato.dart';
@@ -15,7 +15,6 @@ const _dicaValor = "0.00";
 const _textoBotao = "Confirmar";
 
 class FormularioTransferencia extends StatefulWidget {
-
   final Contato contato;
 
   FormularioTransferencia(this.contato);
@@ -32,11 +31,8 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-        appBar: AppBar(
-            title: Text(_tituloAppBar)
-        ),
+        appBar: AppBar(title: Text(_tituloAppBar)),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -51,13 +47,14 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
                   padding: const EdgeInsets.only(top: 16.0),
                   child: Text(
                     widget.contato.name,
-                    style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
                   ),
                 ),
                 Editor(
-                    controlador: _controladorValor,
-                    rotulo: _rotuloValor,
-                    dica: _dicaValor,
+                  controlador: _controladorValor,
+                  rotulo: _rotuloValor,
+                  dica: _dicaValor,
 //                    icone: Icons.monetization_on
                 ),
                 Padding(
@@ -65,27 +62,25 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
                   child: SizedBox(
                     width: double.maxFinite,
                     child: RaisedButton(
-                      child: Text(_textoBotao),
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (contextDialog) {
-                              return TransactionAuthDialog(
-                                onConfirm: (String password) {
-                                  _criaTransferenciaApi(contextDialog, password);
-                                },
-                              );
-                            }
-                        );
-                      }
-                    ),
+                        child: Text(_textoBotao),
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (contextDialog) {
+                                return TransactionAuthDialog(
+                                  onConfirm: (String password) {
+                                    _criaTransferenciaApi(
+                                        context, password);
+                                  },
+                                );
+                              });
+                        }),
                   ),
                 )
               ],
             ),
           ),
-        )
-    );
+        ));
   }
 
   void _criaTransferenciaApi(BuildContext context, String password) {
@@ -94,10 +89,18 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
 
     _webClient.save(transferenciaCriada, password).then((transferencia) {
       if (transferencia != null) {
-        Navigator.pop(context);
+        showDialog(
+            context: context,
+            builder: (contextDialog) {
+              return SuccessDialog("Sucesso");
+            }).then((value) => Navigator.pop(context));
       }
     }).catchError((e) {
-      print("Deu ruim: $e");
-    });
+      showDialog(
+          context: context,
+          builder: (contextDialog) {
+            return FailureDialog(e.message);
+          });
+    }, test: (e) => e is Exception);
   }
 }
