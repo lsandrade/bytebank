@@ -69,10 +69,10 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
                       onPressed: () {
                         showDialog(
                             context: context,
-                            builder: (context) {
+                            builder: (contextDialog) {
                               return TransactionAuthDialog(
                                 onConfirm: (String password) {
-                                  _criaTransferenciaApi(context, password);
+                                  _criaTransferenciaApi(contextDialog, password);
                                 },
                               );
                             }
@@ -91,10 +91,13 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
   void _criaTransferenciaApi(BuildContext context, String password) {
     final double valor = double.tryParse(_controladorValor.text);
     final transferenciaCriada = Transferencia(valor, widget.contato);
+
     _webClient.save(transferenciaCriada, password).then((transferencia) {
       if (transferencia != null) {
         Navigator.pop(context);
       }
+    }).catchError((e) {
+      print("Deu ruim: $e");
     });
   }
 }

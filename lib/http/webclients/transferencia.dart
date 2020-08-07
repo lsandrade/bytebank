@@ -29,6 +29,13 @@ class TransferenciaWebClient {
         body: transferenciaJson
     );
 
+    if (response.statusCode == 400) {
+      throw Exception("Transferencia sem valor");
+    }
+    if (response.statusCode == 401) {
+      throw Exception("Falha na autenticação");
+    }
+
     return Transferencia.fromJson(jsonDecode(response.body));
   }
 
