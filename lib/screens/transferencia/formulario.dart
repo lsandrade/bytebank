@@ -1,5 +1,6 @@
 
 import 'package:bytebank/components/editor.dart';
+import 'package:bytebank/components/transaction_auth_dialog.dart';
 import 'package:bytebank/http/webclients/transferencia.dart';
 import 'package:bytebank/models/contato.dart';
 import 'package:bytebank/models/transferencia.dart';
@@ -65,7 +66,18 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
                     width: double.maxFinite,
                     child: RaisedButton(
                       child: Text(_textoBotao),
-                      onPressed: () => _criaTransferenciaApi(context),
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return TransactionAuthDialog(
+                                onConfirm: (String password) {
+                                  _criaTransferenciaApi(context, password);
+                                },
+                              );
+                            }
+                        );
+                      }
                     ),
                   ),
                 )
@@ -76,10 +88,10 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
     );
   }
 
-  void _criaTransferenciaApi(BuildContext context) {
+  void _criaTransferenciaApi(BuildContext context, String password) {
     final double valor = double.tryParse(_controladorValor.text);
     final transferenciaCriada = Transferencia(valor, widget.contato);
-    _webClient.save(transferenciaCriada).then((transferencia) {
+    _webClient.save(transferenciaCriada, password).then((transferencia) {
       if (transferencia != null) {
         Navigator.pop(context);
       }

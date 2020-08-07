@@ -6,8 +6,6 @@ import 'package:http/http.dart';
 
 import '../webclient.dart';
 
-final _headers = { "Content-Type": "application/json", "password": "1000"};
-
 class TransferenciaWebClient {
   Future<List<Transferencia>> findAll() async {
     final Response response = await client.get(baseUrl)
@@ -19,12 +17,15 @@ class TransferenciaWebClient {
         Transferencia.fromJson(json)).toList();
   }
 
-  Future<Transferencia> save(Transferencia transferencia) async {
+  Future<Transferencia> save(Transferencia transferencia, String password) async {
     String transferenciaJson = jsonEncode(transferencia.toJson());
 
     final Response response = await client.post(
         baseUrl,
-        headers: _headers,
+        headers: {
+          "Content-Type": "application/json",
+          "password": password
+        },
         body: transferenciaJson
     );
 
