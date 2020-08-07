@@ -69,8 +69,7 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
                               builder: (contextDialog) {
                                 return TransactionAuthDialog(
                                   onConfirm: (String password) {
-                                    _criaTransferenciaApi(
-                                        context, password);
+                                    _criaTransferenciaApi(context, password);
                                   },
                                 );
                               });
@@ -83,24 +82,26 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
         ));
   }
 
-  void _criaTransferenciaApi(BuildContext context, String password) {
+  void _criaTransferenciaApi(BuildContext context, String password) async {
     final double valor = double.tryParse(_controladorValor.text);
     final transferenciaCriada = Transferencia(valor, widget.contato);
 
-    _webClient.save(transferenciaCriada, password).then((transferencia) {
-      if (transferencia != null) {
-        showDialog(
-            context: context,
-            builder: (contextDialog) {
-              return SuccessDialog("Sucesso");
-            }).then((value) => Navigator.pop(context));
-      }
-    }).catchError((e) {
+    Transferencia transferencia =
+        await _webClient.save(transferenciaCriada, password).catchError((e) {
       showDialog(
           context: context,
           builder: (contextDialog) {
             return FailureDialog(e.message);
           });
     }, test: (e) => e is Exception);
+
+    if (transferencia != null) {
+      await showDialog(
+          context: context,
+          builder: (contextDialog) {
+            return SuccessDialog("Sucesso");
+          });
+      Navigator.pop(context);
+    }
   }
 }
