@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bytebank/components/editor.dart';
 import 'package:bytebank/components/response_dialog.dart';
 import 'package:bytebank/components/transaction_auth_dialog.dart';
@@ -93,7 +95,13 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
           builder: (contextDialog) {
             return FailureDialog(e.message);
           });
-    }, test: (e) => e is Exception);
+    }, test: (e) => e is HttpException).catchError((e) {
+      showDialog(
+          context: context,
+          builder: (contextDialog) {
+            return FailureDialog("Timeout ao submeter a transferência");
+          });
+    }, test: (e) => e is TimeoutException);
 
     if (transferencia != null) {
       await showDialog(

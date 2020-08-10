@@ -13,7 +13,7 @@ class TransferenciaWebClient {
 
   Future<List<Transferencia>> findAll() async {
     final Response response =
-        await client.get(baseUrl).timeout(Duration(seconds: 5));
+        await client.get(baseUrl);
 
     final List<dynamic> transferenciasDecoded = jsonDecode(response.body);
 
@@ -34,10 +34,12 @@ class TransferenciaWebClient {
       return Transferencia.fromJson(jsonDecode(response.body));
     }
 
-    _throwHttpErrors(response.statusCode);
+    throw HttpException(_statusCodeResponses[response.statusCode]);
   }
+}
 
-  void _throwHttpErrors(int statusCode) {
-    throw Exception(_statusCodeResponses[statusCode]);
-  }
+class HttpException implements Exception {
+  final String message;
+
+  HttpException(this.message);
 }
