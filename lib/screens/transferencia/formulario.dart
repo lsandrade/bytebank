@@ -33,6 +33,7 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
   final TextEditingController _controladorValor = TextEditingController();
   final TransferenciaWebClient _webClient = TransferenciaWebClient();
   final String transferenciaId = Uuid().v4();
+  bool _sending = false;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +51,7 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
                     padding: const EdgeInsets.all(8.0),
                     child: Progress(message: "Enviando..."),
                   ),
-                  visible: false,
+                  visible: _sending,
                 ),
                 Text(
                   widget.contato.name,
@@ -61,7 +62,7 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
                   child: Text(
                     widget.contato.name,
                     style:
-                    TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
+                        TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
                   ),
                 ),
                 Editor(
@@ -96,14 +97,26 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
         ));
   }
 
-  void _criaTransferenciaApi(BuildContext context, String password,
-      String id) async {
+  void _criaTransferenciaApi(
+      BuildContext context, String password, String id) async {
+    _setSending(true);
     final double valor = double.tryParse(_controladorValor.text);
     final transferenciaCriada = Transferencia(id, valor, widget.contato);
 
     Transferencia transferencia =
-    await _envia(transferenciaCriada, password, context);
+        await _envia(transferenciaCriada, password, context);
 
+    await _mostraMensagemSucesso(transferencia, context);
+  }
+
+  void _setSending(sending) {
+    setState(() {
+      _sending = sending;
+    });
+  }
+
+  Future _mostraMensagemSucesso(
+      Transferencia transferencia, BuildContext context) async {
     if (transferencia != null) {
       await showDialog(
           context: context,
@@ -117,14 +130,15 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
   Future<Transferencia> _envia(Transferencia transferenciaCriada,
       String password, BuildContext context) async {
     Transferencia transferencia =
-    await _webClient.save(transferenciaCriada, password).catchError((e) {
+        await _webClient.save(transferenciaCriada, password).catchError((e) {
       _mostrarMensagemFalha(context, message: e.message);
     }, test: (e) => e is HttpException).catchError((e) {
       _mostrarMensagemFalha(context,
           message: "Timeout ao submeter a transferência");
     }, test: (e) => e is TimeoutException).catchError((e) {
       _mostrarMensagemFalha(context);
-    }, test: (e) => e is Exception);
+    }, test: (e) => e is Exception).whenComplete(() => _setSending(false));
+
     return transferencia;
   }
 
