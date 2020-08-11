@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bytebank/components/editor.dart';
+import 'package:bytebank/components/progress.dart';
 import 'package:bytebank/components/response_dialog.dart';
 import 'package:bytebank/components/transaction_auth_dialog.dart';
 import 'package:bytebank/http/webclients/transferencia.dart';
@@ -44,6 +45,13 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Visibility(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Progress(message: "Enviando..."),
+                  ),
+                  visible: false,
+                ),
                 Text(
                   widget.contato.name,
                   style: TextStyle(fontSize: 24.0),
@@ -53,7 +61,7 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
                   child: Text(
                     widget.contato.name,
                     style:
-                        TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
+                    TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
                   ),
                 ),
                 Editor(
@@ -88,13 +96,13 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
         ));
   }
 
-  void _criaTransferenciaApi(
-      BuildContext context, String password, String id) async {
+  void _criaTransferenciaApi(BuildContext context, String password,
+      String id) async {
     final double valor = double.tryParse(_controladorValor.text);
     final transferenciaCriada = Transferencia(id, valor, widget.contato);
 
     Transferencia transferencia =
-        await _envia(transferenciaCriada, password, context);
+    await _envia(transferenciaCriada, password, context);
 
     if (transferencia != null) {
       await showDialog(
@@ -109,7 +117,7 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
   Future<Transferencia> _envia(Transferencia transferenciaCriada,
       String password, BuildContext context) async {
     Transferencia transferencia =
-        await _webClient.save(transferenciaCriada, password).catchError((e) {
+    await _webClient.save(transferenciaCriada, password).catchError((e) {
       _mostrarMensagemFalha(context, message: e.message);
     }, test: (e) => e is HttpException).catchError((e) {
       _mostrarMensagemFalha(context,

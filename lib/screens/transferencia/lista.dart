@@ -37,7 +37,7 @@ class ListaTransferenciasState extends State<ListaTransferencias> {
             case ConnectionState.none:
               break;
             case ConnectionState.waiting:
-              return Progress("Carregando");
+              return Progress();
               break;
             case ConnectionState.active:
               break;
