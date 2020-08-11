@@ -89,19 +89,7 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
     final transferenciaCriada = Transferencia(valor, widget.contato);
 
     Transferencia transferencia =
-        await _webClient.save(transferenciaCriada, password).catchError((e) {
-      showDialog(
-          context: context,
-          builder: (contextDialog) {
-            return FailureDialog(e.message);
-          });
-    }, test: (e) => e is HttpException).catchError((e) {
-      showDialog(
-          context: context,
-          builder: (contextDialog) {
-            return FailureDialog("Timeout ao submeter a transferência");
-          });
-    }, test: (e) => e is TimeoutException);
+        await _envia(transferenciaCriada, password, context);
 
     if (transferencia != null) {
       await showDialog(
@@ -111,5 +99,28 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
           });
       Navigator.pop(context);
     }
+  }
+
+  Future<Transferencia> _envia(Transferencia transferenciaCriada,
+      String password, BuildContext context) async {
+    Transferencia transferencia =
+        await _webClient.save(transferenciaCriada, password).catchError((e) {
+      _mostrarMensagemFalha(context, message: e.message);
+    }, test: (e) => e is HttpException).catchError((e) {
+      _mostrarMensagemFalha(context,
+          message: "Timeout ao submeter a transferência");
+    }, test: (e) => e is TimeoutException).catchError((e) {
+      _mostrarMensagemFalha(context);
+    }, test: (e) => e is Exception);
+    return transferencia;
+  }
+
+  void _mostrarMensagemFalha(BuildContext context,
+      {String message = "Erro desconhecido"}) {
+    showDialog(
+        context: context,
+        builder: (contextDialog) {
+          return FailureDialog(message);
+        });
   }
 }
