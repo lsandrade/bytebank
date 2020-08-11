@@ -8,6 +8,7 @@ import 'package:bytebank/models/contato.dart';
 import 'package:bytebank/models/transferencia.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 const _tituloAppBar = "Criando Transferencia";
 const _rotuloNumeroConta = "Número da conta";
@@ -30,9 +31,11 @@ class FormularioTransferencia extends StatefulWidget {
 class FormularioTransferenciaState extends State<FormularioTransferencia> {
   final TextEditingController _controladorValor = TextEditingController();
   final TransferenciaWebClient _webClient = TransferenciaWebClient();
+  final String transferenciaId = Uuid().v4();
 
   @override
   Widget build(BuildContext context) {
+    print("Id da transferencia $transferenciaId");
     return Scaffold(
         appBar: AppBar(title: Text(_tituloAppBar)),
         body: SingleChildScrollView(
@@ -71,7 +74,8 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
                               builder: (contextDialog) {
                                 return TransactionAuthDialog(
                                   onConfirm: (String password) {
-                                    _criaTransferenciaApi(context, password);
+                                    _criaTransferenciaApi(
+                                        context, password, transferenciaId);
                                   },
                                 );
                               });
@@ -84,9 +88,10 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
         ));
   }
 
-  void _criaTransferenciaApi(BuildContext context, String password) async {
+  void _criaTransferenciaApi(
+      BuildContext context, String password, String id) async {
     final double valor = double.tryParse(_controladorValor.text);
-    final transferenciaCriada = Transferencia(valor, widget.contato);
+    final transferenciaCriada = Transferencia(id, valor, widget.contato);
 
     Transferencia transferencia =
         await _envia(transferenciaCriada, password, context);

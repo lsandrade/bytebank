@@ -8,7 +8,8 @@ import '../webclient.dart';
 class TransferenciaWebClient {
   static final Map<int, String> _statusCodeResponses = {
     400: "Transferencia sem valor",
-    401: "Falha na autenticação"
+    401: "Falha na autenticação",
+    409: "Transferência já existe"
   };
 
   Future<List<Transferencia>> findAll() async {
@@ -34,7 +35,14 @@ class TransferenciaWebClient {
       return Transferencia.fromJson(jsonDecode(response.body));
     }
 
-    throw HttpException(_statusCodeResponses[response.statusCode]);
+    throw HttpException(_getMessage(response.statusCode));
+  }
+
+  String _getMessage(int statusCode) {
+    if (_statusCodeResponses.containsKey(statusCode)) {
+      return _statusCodeResponses[statusCode];
+    }
+    return "Erro desconhecido";
   }
 }
 
