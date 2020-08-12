@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import 'matchers.dart';
-import 'mocks.dart';
+import '../matchers/matchers.dart';
+import '../mocks/mocks.dart';
 
 void main() {
   testWidgets("deve salvar contato", (tester) async {
@@ -53,7 +53,7 @@ void main() {
 
     // Encontra TextField pedindo nome completo do usuário
     final nameTextField = find.byWidgetPredicate((widget) {
-      return _textFieldMatcher(widget, "Nome completo");
+      return textFieldMatcher(widget, "Nome completo");
     });
     expect(nameTextField, findsOneWidget);
 
@@ -62,7 +62,7 @@ void main() {
 
     // Encontra TextField pedindo número da conta
     final contaTextField = find.byWidgetPredicate((widget) {
-      return _textFieldMatcher(widget, "Número da conta");
+      return textFieldMatcher(widget, "Número da conta");
     });
     expect(contaTextField, findsOneWidget);
 
@@ -87,9 +87,3 @@ void main() {
   });
 }
 
-bool _textFieldMatcher(Widget widget, String label) {
-  if (widget is TextField) {
-    return widget.decoration.labelText == label;
-  }
-  return false;
-}
