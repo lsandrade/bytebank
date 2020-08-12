@@ -7,11 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'matchers.dart';
+import 'mocks.dart';
 
 void main() {
   testWidgets("deve salvar contato", (tester) async {
+
+    final mockContatoDao = MockContatoDao();
+
     // Abre app
-    await tester.pumpWidget(ByteBankApp());
+    await tester.pumpWidget(ByteBankApp(contatoDao: mockContatoDao,));
 
     // verifica dasboard
     final dashboard = find.byType(Dashboard);
@@ -25,10 +29,7 @@ void main() {
 
     // clica no botão
     await tester.tap(transferirFeatureItem);
-    await tester.pump();
-    await tester.pump();
-    await tester.pump();
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     // Verifica lista de contatos
     final listaContatos = find.byType(ListaContatos);
@@ -40,9 +41,7 @@ void main() {
 
     // pressiona botão de novo contato
     await tester.tap(fabNovoContato);
-    await tester.pump();
-    await tester.pump();
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     // Abre formulario de contato
     final formularioContato = find.byType(FormularioContatos);

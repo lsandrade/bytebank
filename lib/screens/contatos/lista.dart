@@ -7,6 +7,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ListaContatos extends StatefulWidget {
+
+  final ContatoDao contatoDao;
+
+  const ListaContatos({@required this.contatoDao});
+
   @override
   _ListaContatosState createState() => _ListaContatosState();
 }
