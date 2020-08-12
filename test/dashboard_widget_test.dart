@@ -13,7 +13,11 @@ void main() {
   
   testWidgets("Deve apresentar botão de transferências", (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: Dashboard()));
-    final transferenciaFeature = find.byType(FeatureItem);
-    expect(transferenciaFeature, findsWidgets);
+
+    final iconeTransferenciaFeature = find.widgetWithIcon(FeatureItem, Icons.monetization_on);
+    expect(iconeTransferenciaFeature, findsWidgets);
+
+    final nameTransferenciaFeature = find.widgetWithText(FeatureItem, "Lista de transferências");
+    expect(nameTransferenciaFeature, findsWidgets);
   });
 }
