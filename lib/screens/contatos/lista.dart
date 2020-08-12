@@ -44,7 +44,7 @@ class _ListaContatosState extends State<ListaContatos> {
               return ListView.builder(
                 itemBuilder: (contex, index) {
                   final Contato contato = contatos[index];
-                  return _ContactItem(
+                  return ContactItem(
                     contato,
                     onClick: () {
                       Navigator.of(context).push(MaterialPageRoute(
@@ -78,11 +78,11 @@ class _ListaContatosState extends State<ListaContatos> {
   }
 }
 
-class _ContactItem extends StatelessWidget {
+class ContactItem extends StatelessWidget {
   final Contato contato;
   final Function onClick;
 
-  const _ContactItem(this.contato, {@required this.onClick});
+  const ContactItem(this.contato, {@required this.onClick});
 
   @override
   Widget build(BuildContext context) {
