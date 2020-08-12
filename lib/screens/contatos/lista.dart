@@ -7,18 +7,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ListaContatos extends StatefulWidget {
-
   final ContatoDao contatoDao;
 
   const ListaContatos({@required this.contatoDao});
 
   @override
-  _ListaContatosState createState() => _ListaContatosState();
+  _ListaContatosState createState() =>
+      _ListaContatosState(contatoDao: contatoDao);
 }
 
 class _ListaContatosState extends State<ListaContatos> {
+  final ContatoDao contatoDao;
 
-  final ContatoDao _contatoDao = ContatoDao();
+  _ListaContatosState({@required this.contatoDao});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class _ListaContatosState extends State<ListaContatos> {
       ),
       body: FutureBuilder<List<Contato>>(
         initialData: List(),
-        future: Future.delayed(Duration(milliseconds: 500)).then((value) => _contatoDao.findAll()),
+        future: contatoDao.findAll(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -46,11 +47,9 @@ class _ListaContatosState extends State<ListaContatos> {
                   return _ContactItem(
                     contato,
                     onClick: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => FormularioTransferencia(contato)
-                        )
-                      );
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              FormularioTransferencia(contato)));
                     },
                   );
                 },
@@ -63,9 +62,11 @@ class _ListaContatosState extends State<ListaContatos> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => FormularioContatos())
-          ).then((value){
+          Navigator.of(context)
+              .push(MaterialPageRoute(
+                  builder: (context) =>
+                      FormularioContatos(contatoDao: contatoDao)))
+              .then((value) {
             setState(() {
               widget.createState();
             });
@@ -77,19 +78,14 @@ class _ListaContatosState extends State<ListaContatos> {
   }
 }
 
-
 class _ContactItem extends StatelessWidget {
   final Contato contato;
   final Function onClick;
 
-  const _ContactItem(
-      this.contato, {
-        @required this.onClick
-      });
+  const _ContactItem(this.contato, {@required this.onClick});
 
   @override
-  Widget
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
     return Card(
       child: ListTile(
         onTap: () => onClick(),
