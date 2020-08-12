@@ -7,6 +7,7 @@ import 'package:bytebank/components/transaction_auth_dialog.dart';
 import 'package:bytebank/http/webclients/transferencia.dart';
 import 'package:bytebank/models/contato.dart';
 import 'package:bytebank/models/transferencia.dart';
+import 'package:bytebank/widgets/app_dependencies.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
@@ -31,13 +32,15 @@ class FormularioTransferencia extends StatefulWidget {
 
 class FormularioTransferenciaState extends State<FormularioTransferencia> {
   final TextEditingController _controladorValor = TextEditingController();
-  final TransferenciaWebClient _webClient = TransferenciaWebClient();
+
+//  final TransferenciaWebClient _webClient = TransferenciaWebClient();
   final String transferenciaId = Uuid().v4();
   bool _sending = false;
 
   @override
   Widget build(BuildContext context) {
     print("Id da transferencia $transferenciaId");
+    final dependencias = AppDependencies.of(context);
     return Scaffold(
         appBar: AppBar(title: Text(_tituloAppBar)),
         body: SingleChildScrollView(
@@ -69,7 +72,6 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
                   controlador: _controladorValor,
                   rotulo: _rotuloValor,
                   dica: _dicaValor,
-//                    icone: Icons.monetization_on
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 16.0),
@@ -84,7 +86,10 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
                                 return TransactionAuthDialog(
                                   onConfirm: (String password) {
                                     _criaTransferenciaApi(
-                                        context, password, transferenciaId);
+                                        dependencias.webClient,
+                                        context,
+                                        password,
+                                        transferenciaId);
                                   },
                                 );
                               });
@@ -97,14 +102,14 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
         ));
   }
 
-  void _criaTransferenciaApi(
+  void _criaTransferenciaApi(TransferenciaWebClient webClient,
       BuildContext context, String password, String id) async {
     _setSending(true);
     final double valor = double.tryParse(_controladorValor.text);
     final transferenciaCriada = Transferencia(id, valor, widget.contato);
 
     Transferencia transferencia =
-        await _envia(transferenciaCriada, password, context);
+        await _envia(webClient, transferenciaCriada, password, context);
 
     await _mostraMensagemSucesso(transferencia, context);
   }
@@ -127,10 +132,14 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
     }
   }
 
-  Future<Transferencia> _envia(Transferencia transferenciaCriada,
-      String password, BuildContext context) async {
+  Future<Transferencia> _envia(
+      TransferenciaWebClient webClient,
+      Transferencia transferenciaCriada,
+      String password,
+      BuildContext context) async {
+
     Transferencia transferencia =
-        await _webClient.save(transferenciaCriada, password).catchError((e) {
+        await webClient.save(transferenciaCriada, password).catchError((e) {
       _mostrarMensagemFalha(context, message: e.message);
     }, test: (e) => e is HttpException).catchError((e) {
       _mostrarMensagemFalha(context,

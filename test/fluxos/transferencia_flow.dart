@@ -1,4 +1,5 @@
 
+import 'package:bytebank/components/transaction_auth_dialog.dart';
 import 'package:bytebank/main.dart';
 import 'package:bytebank/models/contato.dart';
 import 'package:bytebank/screens/contatos/dashboard.dart';
@@ -15,10 +16,12 @@ import 'eventos.dart';
 void main() {
   testWidgets("Deve salvar transferencia", (tester) async {
     final mockContatoDao = MockContatoDao();
+    final webclient = MockTransferenciaWebClient();
 
     // Abre app
     await tester.pumpWidget(ByteBankApp(
       contatoDao: mockContatoDao,
+      webClient: webclient,
     ));
 
     // verifica dasboard
@@ -55,5 +58,31 @@ void main() {
     final transferenciaForm = find.byType(FormularioTransferencia);
     expect(transferenciaForm, findsOneWidget);
 
+    // Verifica nome do usuário
+    final nomeContato = find.text("Alex");
+    expect(nomeContato, findsWidgets);
+
+    // Verifica widget que pede para digitar o valor
+    final textFieldValue = find.byWidgetPredicate((widget) {
+      return textFieldMatcher(widget, "Valor");
+    });
+    expect(textFieldValue, findsOneWidget);
+
+    //Digita valor 199 para transferir
+    await tester.enterText(textFieldValue, "199");
+
+    // encontra botão de confirmar
+    final transferButton = find.widgetWithText(RaisedButton, "Confirmar");
+    expect(transferButton, findsOneWidget);
+
+    // pressiona botao
+    await tester.tap(transferButton);
+    await tester.pumpAndSettle();
+
+    // verifica apresentação do dialogo de autenticacao
+    final transferAuthDialog = find.byType(TransactionAuthDialog);
+    expect(transferAuthDialog, findsOneWidget);
+
+    
   });
 }
