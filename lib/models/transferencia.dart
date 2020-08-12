@@ -20,6 +20,17 @@ class Transferencia {
   };
 
   @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Transferencia &&
+          runtimeType == other.runtimeType &&
+          valor == other.valor &&
+          contato == other.contato;
+
+  @override
+  int get hashCode => valor.hashCode ^ contato.hashCode;
+
+  @override
   String toString() {
     return 'Transferencia{id: $id, valor: $valor, contato: $contato}';
   }
