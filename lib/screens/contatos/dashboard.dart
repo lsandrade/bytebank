@@ -1,13 +1,8 @@
-import 'package:bytebank/dao/dao_contato.dart';
 import 'package:bytebank/screens/contatos/lista.dart';
 import 'package:bytebank/screens/transferencia/lista.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatelessWidget {
-
-  final ContatoDao contatoDao;
-
-  const Dashboard({@required this.contatoDao});
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +52,7 @@ class Dashboard extends StatelessWidget {
 
   void _showContactsList(BuildContext context) {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => ListaContatos(contatoDao: contatoDao)));
+        .push(MaterialPageRoute(builder: (context) => ListaContatos()));
   }
 
   _showTransactionsList(BuildContext context) {

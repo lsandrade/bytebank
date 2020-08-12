@@ -1,27 +1,21 @@
 import 'package:bytebank/dao/dao_contato.dart';
 import 'package:bytebank/models/contato.dart';
+import 'package:bytebank/widgets/app_dependencies.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FormularioContatos extends StatefulWidget {
-  final ContatoDao contatoDao;
-
-  const FormularioContatos({@required this.contatoDao});
-
   @override
-  _FormularioContatosState createState() =>
-      _FormularioContatosState(contatoDao: contatoDao);
+  _FormularioContatosState createState() => _FormularioContatosState();
 }
 
 class _FormularioContatosState extends State<FormularioContatos> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _accountController = TextEditingController();
-  final ContatoDao contatoDao;
-
-  _FormularioContatosState({@required this.contatoDao});
 
   @override
   Widget build(BuildContext context) {
+    final dependencies = AppDependencies.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Novo Contato'),
@@ -55,7 +49,7 @@ class _FormularioContatosState extends State<FormularioContatos> {
                     final int account = int.tryParse(_accountController.text);
 
                     final Contato contato = Contato(0, name, account);
-                    _save(contato, context);
+                    _save(dependencies.contatoDao, contato, context);
                   },
                 ),
               ),
@@ -66,7 +60,8 @@ class _FormularioContatosState extends State<FormularioContatos> {
     );
   }
 
-  void _save(Contato contato, BuildContext context) async {
+  void _save(
+      ContatoDao contatoDao, Contato contato, BuildContext context) async {
     await contatoDao.save(contato);
     Navigator.pop(context);
   }

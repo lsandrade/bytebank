@@ -1,35 +1,27 @@
 import 'package:bytebank/components/progress.dart';
-import 'package:bytebank/dao/dao_contato.dart';
 import 'package:bytebank/models/contato.dart';
 import 'package:bytebank/screens/contatos/formulario.dart';
 import 'package:bytebank/screens/transferencia/formulario.dart';
+import 'package:bytebank/widgets/app_dependencies.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ListaContatos extends StatefulWidget {
-  final ContatoDao contatoDao;
-
-  const ListaContatos({@required this.contatoDao});
-
   @override
-  _ListaContatosState createState() =>
-      _ListaContatosState(contatoDao: contatoDao);
+  _ListaContatosState createState() => _ListaContatosState();
 }
 
 class _ListaContatosState extends State<ListaContatos> {
-  final ContatoDao contatoDao;
-
-  _ListaContatosState({@required this.contatoDao});
-
   @override
   Widget build(BuildContext context) {
+    final dependencies = AppDependencies.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("Transferir"),
       ),
       body: FutureBuilder<List<Contato>>(
         initialData: List(),
-        future: contatoDao.findAll(),
+        future: dependencies.contatoDao.findAll(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -63,9 +55,8 @@ class _ListaContatosState extends State<ListaContatos> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)
-              .push(MaterialPageRoute(
-                  builder: (context) =>
-                      FormularioContatos(contatoDao: contatoDao)))
+              .push(
+                  MaterialPageRoute(builder: (context) => FormularioContatos()))
               .then((value) {
             setState(() {
               widget.createState();
