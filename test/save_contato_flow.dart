@@ -1,9 +1,11 @@
 import 'package:bytebank/main.dart';
+import 'package:bytebank/models/contato.dart';
 import 'package:bytebank/screens/contatos/dashboard.dart';
 import 'package:bytebank/screens/contatos/formulario.dart';
 import 'package:bytebank/screens/contatos/lista.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 import 'matchers.dart';
 import 'mocks.dart';
@@ -35,6 +37,8 @@ void main() {
     final listaContatos = find.byType(ListaContatos);
     expect(listaContatos, findsOneWidget);
 
+    verify(mockContatoDao.findAll()).called(1);
+
     // encontra botão de novo contato
     final fabNovoContato = find.widgetWithIcon(FloatingActionButton, Icons.add);
     expect(fabNovoContato, findsOneWidget);
@@ -49,10 +53,7 @@ void main() {
 
     // Encontra TextField pedindo nome completo do usuário
     final nameTextField = find.byWidgetPredicate((widget) {
-      if (widget is TextField) {
-        return widget.decoration.labelText == "Nome completo";
-      }
-      return false;
+      return _textFieldMatcher(widget, "Nome completo");
     });
     expect(nameTextField, findsOneWidget);
 
@@ -61,10 +62,7 @@ void main() {
 
     // Encontra TextField pedindo número da conta
     final contaTextField = find.byWidgetPredicate((widget) {
-      if (widget is TextField) {
-        return widget.decoration.labelText == "Número da conta";
-      }
-      return false;
+      return _textFieldMatcher(widget, "Número da conta");
     });
     expect(contaTextField, findsOneWidget);
 
@@ -79,8 +77,19 @@ void main() {
     await tester.tap(createButton);
     await tester.pumpAndSettle();
 
+    verify(mockContatoDao.save(Contato(0, 'Alex', 1000)));
+
     // Retorna para lista de contatos
     final listaContatosBack = find.byType(ListaContatos);
     expect(listaContatosBack, findsOneWidget);
+
+    verify(mockContatoDao.findAll());
   });
+}
+
+bool _textFieldMatcher(Widget widget, String label) {
+  if (widget is TextField) {
+    return widget.decoration.labelText == label;
+  }
+  return false;
 }
