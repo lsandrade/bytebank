@@ -6,7 +6,7 @@ class Transferencia {
   final double valor;
   final Contato contato;
 
-  Transferencia(this.id, this.valor, this.contato);
+  Transferencia(this.id, this.valor, this.contato) : assert(valor > 0);
 
   Transferencia.fromJson(Map<String, dynamic> json) :
       id = json['id'],
